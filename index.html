@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hostel Management System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        :root {
+            --primary: #2563eb;
+            --primary-light: #dbeafe;
+            --secondary: #64748b;
+            --success: #059669;
+            --warning: #d97706;
+            --danger: #dc2626;
+            --light: #f8fafc;
+            --dark: #1e293b;
+            --border: #e2e8f0;
+        }
+        
+        body {
+            background-color: #f1f5f9;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+        
+        /* Login Page Styles */
+        .login-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--primary-light) 0%, #bfdbfe 100%);
+            padding: 20px;
+        }
+        
+        .login-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 400px;
+        }
+        
+        .login-logo {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .login-logo h1 {
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+        
+        .login-logo p {
+            color: var(--secondary);
+        }
+        
+        .form-group {
+            margin-bottom: 1.2rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+        
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+        
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+            width: 100%;
+        }
+        
+        .btn-primary:hover {
+            background-color: #1d4ed8;
+        }
+        
+        .demo-note {
+            text-align: center;
+            margin-top: 1rem;
+            color: var(--secondary);
+            font-size: 0.9rem;
+        }
+        
+        /* Dashboard Styles */
+        .dashboard {
+            display: none;
+            min-height: 100vh;
+        }
+        
+        .dashboard-header {
+            background: white;
+            padding: 1rem 2rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .dashboard-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .dashboard-brand h1 {
+            color: var(--primary);
+        }
+        
+        .dashboard-content {
+            display: flex;
+            min-height: calc(100vh - 80px);
+        }
+        
+        .sidebar {
+            width: 250px;
+            background: white;
+            border-right: 1px solid var(--border);
+            padding: 1.5rem 1rem;
+        }
+        
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 0.75rem 1rem;
+            margin-bottom: 0.5rem;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-item:hover,
+        .nav-item.active {
+            background-color: var(--primary-light);
+            color: var(--primary);
+        }
+        
+        .nav-icon {
+            width: 20px;
+            height: 20px;
+        }
+        
+        .main-content {
+            flex: 1;
+            padding: 2rem;
+            background-color: #f8fafc;
+        }
+        
+        .section {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+        }
+        
+        .section h2 {
+            margin-bottom: 1.5rem;
+            color: var(--dark);
+            border-bottom: 2px solid var(--primary-light);
+            padding-bottom: 0.5rem;
+        }
+        
+        /* Dashboard Stats */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .stat-card h3 {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--primary);
+        }
+        
+        .stat-card p {
+            color: var(--secondary);
+        }
+        
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: var(--primary-light);
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+        
+        /* Table Styles */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+        
+        th, td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        th {
+            background-color: #f8fafc;
+            font-weight: 600;
+        }
+        
+        tr:hover {
+            background-color: #f8fafc;
+        }
+        
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+        
+        .status-full {
+            background-color: #fee2e2;
+            color: var(--danger);
+        }
+        
+        .status-available {
+            background-color: #dcfce7;
+            color: var(--success);
+        }
+        
+        .status-pending {
+            background-color: #fef3c7;
+            color: var(--warning);
+        }
+        
+        .status-resolved {
+            background-color: #dcfce7;
+            color: var(--success);
+        }
+        
+        .status-in-progress {
+            background-color: #dbeafe;
+            color: var(--primary);
+        }
+        
+        /* Form Elements */
+        .form-row {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .form-row input,
+        .form-row select,
+        .form-row textarea {
+            flex: 1;
+            padding: 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: 5px;
+        }
+        
+        .btn-sm {
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+        }
+        
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            .dashboard-content {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                border-right: none;
+                border-bottom: 1px solid var(--border);
+            }
+            
+            .form-row {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Page -->
+    <div id="loginPage" class="login-container">
+        <div class="login-card">
+            <div class="login-logo">
+                <h1>Hostel Management System</h1>
+                <p>Transparent hostel management for everyone</p>
+            </div>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="role">Login As</label>
+                    <select id="role" name="role">
+                        <option value="student">Student</option>
+                        <option value="staff">Staff</option>
+                        <option value="admin">Admin</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username" placeholder="Enter your username" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" placeholder="Enter your password" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Login</button>
+                <div class="demo-note">
+                    <p>Enter username & password</p>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Dashboard -->
+    <div id="dashboard" class="dashboard">
+        <header class="dashboard-header">
+            <div class="dashboard-brand">
+                <h1>Hostel Management System</h1>
+            </div>
+            <div>
+                <button id="logoutBtn" class="btn" style="background: var(--danger); color: white;">Logout</button>
+            </div>
+        </header>
+
+        <div class="dashboard-content">
+            <aside class="sidebar">
+                <div class="nav-item active" data-section="dashboard">
+                    <span>📊</span>
+                    <span>Dashboard</span>
+                </div>
+                <div class="nav-item" data-section="attendance">
+                    <span>📝</span>
+                    <span>Attendance</span>
+                </div>
+                <div class="nav-item" data-section="cleaning">
+                    <span>🧹</span>
+                    <span>Room Cleaning</span>
+                </div>
+                <div class="nav-item" data-section="mess">
+                    <span>🍽️</span>
+                    <span>Mess Menu</span>
+                </div>
+                <div class="nav-item" data-section="meetings">
+                    <span>🗓️</span>
+                    <span>Meetings</span>
+                </div>
+                <div class="nav-item" data-section="complaints">
+                    <span>⚠️</span>
+                    <span>Complaints</span>
+                </div>
+                <div class="nav-item" data-section="students">
+                    <span>👥</span>
+                    <span>Student Details</span>
+                </div>
+                <div class="nav-item" data-section="rooms">
+                    <span>🚪</span>
+                    <span>Room Details</span>
+                </div>
+            </aside>
+
+            <main class="main-content">
+                <!-- Dashboard Section -->
+                <div id="dashboardSection" class="section">
+                    <h2>Dashboard Overview</h2>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div>
+                                <p>Total Students</p>
+                                <h3>120</h3>
+                            </div>
+                            <div class="stat-icon">👥</div>
+                        </div>
+                        <div class="stat-card">
+                            <div>
+                                <p>Available Rooms</p>
+                                <h3>8</h3>
+                            </div>
+                            <div class="stat-icon">🚪</div>
+                        </div>
+                        <div class="stat-card">
+                            <div>
+                                <p>Pending Complaints</p>
+                                <h3>5</h3>
+                            </div>
+                            <div class="stat-icon">⚠️</div>
+                        </div>
+                        <div class="stat-card">
+                            <div>
+                                <p>Attendance Today</p>
+                                <h3>92%</h3>
+                            </div>
+                            <div class="stat-icon">📊</div>
+                        </div>
+                    </div>
+
+                    <div class="section">
+                        <h3>Quick Actions</h3>
+                        <div style="display: flex; gap: 10px; margin-top: 15px;">
+                            <button class="btn btn-primary btn-sm" data-section="attendance">Mark Attendance</button>
+                            <button class="btn btn-primary btn-sm" data-section="complaints">Submit Complaint</button>
+                            <button class="btn btn-primary btn-sm" data-section="cleaning">Check Cleaning</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Attendance Section -->
+                <div id="attendanceSection" class="section" style="display: none;">
+                    <h2>Hostel Attendance</h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Present</th>
+                                <th>Absent</th>
+                                <th>Attendance %</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>2023-10-01</td>
+                                <td>85</td>
+                                <td>15</td>
+                                <td>85%</td>
+                            </tr>
+                            <tr>
+                                <td>2023-10-02</td>
+                                <td>92</td>
+                                <td>8</td>
+                                <td>92%</td>
+                            </tr>
+                            <tr>
+                                <td>2023-10-03</td>
+                                <td>78</td>
+                                <td>22</td>
+                                <td>78%</td>
+                            </tr>
+                            <tr>
+                                <td>2023-10-04</td>
+                                <td>95</td>
+                                <td>5</td>
+                                <td>95%</td>
+                            </tr>
+                            <tr>
+                                <td>2023-10-05</td>
+                                <td>88</td>
+                                <td>12</td>
+                                <td>88%</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Room Cleaning Section -->
+                <div id="cleaningSection" class="section" style="display: none;">
+                    <h2>Room Cleaning Status</h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Room</th>
+                                <th>Date</th>
+                                <th>Status</th>
+                                <th>Staff</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>A-101</td>
+                                <td>2023-10-05</td>
+                                <td><span class="status-badge status-resolved">Cleaned</span></td>
+                                <td>Ramesh</td>
+                                <td><button class="btn btn-sm" style="background: var(--primary); color: white;">Mark Done</button></td>
+                            </tr>
+                            <tr>
+                                <td>A-102</td>
+                                <td>2023-10-05</td>
+                                <td><span class="status-badge status-pending">Pending</span></td>
+                                <td>-</td>
+                                <td><button class="btn btn-sm" style="background: var(--primary); color: white;">Mark Done</button></td>
+                            </tr>
+                            <tr>
+                                <td>B-205</td>
+                                <td>2023-10-05</td>
+                                <td><span class="status-badge status-resolved">Cleaned</span></td>
+                                <td>Suresh</td>
+                                <td><button class="btn btn-sm" style="background: var(--primary); color: white;">Mark Done</button></td>
+                            </tr>
+                            <tr>
+                                <td>C-302</td>
+                                <td>2023-10-05</td>
+                                <td><span class="status-badge status-resolved">Cleaned</span></td>
+                                <td>Ramesh</td>
+                                <td><button class="btn btn-sm" style="background: var(--primary); color: white;">Mark Done</button></td>
+                            </tr>
+                            <tr>
+                                <td>D-401</td>
+                                <td>2023-10-05</td>
+                                <td><span class="status-badge status-pending">Pending</span></td>
+                                <td>-</td>
+                                <td><button class="btn btn-sm" style="background: var(--primary); color: white;">Mark Done</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Mess Menu Section -->
+                <div id="messSection" class="section" style="display: none;">
+                    <h2>Weekly Mess Menu</h2>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; margin-top: 1rem;">
+                        <div style="background: var(--primary-light); padding: 1rem; border-radius: 8px;">
+                            <h3>Monday</h3>
+                            <p><strong>Breakfast:</strong> Poha, Tea</p>
+                            <p><strong>Lunch:</strong> Rice, Dal, Sabzi, Roti</p>
+                            <p><strong>Dinner:</strong> Rice, Chicken Curry, Roti</p>
+                        </div>
+                        <div style="background: var(--primary-light); padding: 1rem; border-radius: 8px;">
+                            <h3>Tuesday</h3>
+                            <p><strong>Breakfast:</strong> Sandwich, Milk</p>
+                            <p><strong>Lunch:</strong> Rice, Rajma, Sabzi, Roti</p>
+                            <p><strong>Dinner:</strong> Rice, Egg Curry, Roti</p>
+                        </div>
+                        <div style="background: var(--primary-light); padding: 1rem; border-radius: 8px;">
+                            <h3>Wednesday</h3>
+                            <p><strong>Breakfast:</strong> Idli, Sambar</p>
+                            <p><strong>Lunch:</strong> Rice, Chole, Sabzi, Roti</p>
+                            <p><strong>Dinner:</strong> Rice, Fish Curry, Roti</p>
+                        </div>
+                        <div style="background: var(--primary-light); padding: 1rem; border-radius: 8px;">
+                            <h3>Thursday</h3>
+                            <p><strong>Breakfast:</strong> Paratha, Curd</p>
+                            <p><strong>Lunch:</strong> Rice, Kadhi, Sabzi, Roti</p>
+                            <p><strong>Dinner:</strong> Rice, Paneer Curry, Roti</p>
+                        </div>
+                        <div style="background: var(--primary-light); padding: 1rem; border-radius: 8px;">
+                            <h3>Friday</h3>
+                            <p><strong>Breakfast:</strong> Cornflakes, Milk</p>
+                            <p><strong>Lunch:</strong> Rice, Dal Fry, Sabzi, Roti</p>
+                            <p><strong>Dinner:</strong> Rice, Mutton Curry, Roti</p>
+                        </div>
+                        <div style="background: var(--primary-light); padding: 1rem; border-radius: 8px;">
+                            <h3>Saturday</h3>
+                            <p><strong>Breakfast:</strong> Utappam, Chutney</p>
+                            <p><strong>Lunch:</strong> Biryani, Raita</p>
+                            <p><strong>Dinner:</strong> Fried Rice, Manchurian</p>
+                        </div>
+                        <div style="background: var(--primary-light); padding: 1rem; border-radius: 8px;">
+                            <h3>Sunday</h3>
+                            <p><strong>Breakfast:</strong> Puri, Halwa</p>
+                            <p><strong>Lunch:</strong> Rice, Sambar, Rasam</p>
+                            <p><strong>Dinner:</strong> Rice, Curd, Pickle</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Meetings Section -->
+                <div id="meetingsSection" class="section" style="display: none;">
+                    <h2>Hostel Meetings</h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Title</th>
+                                <th>Date</th>
+                                <th>Time</th>
+                                <th>Venue</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>Hostel Committee Meeting</td>
+                                <td>2023-10-10</td>
+                                <td>4:00 PM</td>
+                                <td>Common Room</td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>Student Grievance Meeting</td>
+                                <td>2023-10-15</td>
+                                <td>3:00 PM</td>
+                                <td>Admin Office</td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td>Cultural Event Planning</td>
+                                <td>2023-10-20</td>
+                                <td>5:00 PM</td>
+                                <td>Auditorium</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Complaints Section -->
+                <div id="complaintsSection" class="section" style="display: none;">
+                    <h2>Complaints Management</h2>
+                    <div class="form-row">
+                        <select>
+                            <option value="">Select Type</option>
+                            <option value="Plumber">Plumber</option>
+                            <option value="Electrician">Electrician</option>
+                            <option value="Carpenter">Carpenter</option>
+                            <option value="Other">Other</option>
+                        </select>
+                        <input type="text" placeholder="Room Number">
+                        <input type="text" placeholder="Description">
+                    </div>
+                    <button class="btn btn-primary">Submit Complaint</button>
+
+                    <h3 style="margin-top: 2rem;">Recent Complaints</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Type</th>
+                                <th>Room</th>
+                                <th>Description</th>
+                                <th>Status</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>Plumber</td>
+                                <td>A-101</td>
+                                <td>Tap leaking in bathroom</td>
+                                <td><span class="status-badge status-resolved">Resolved</span></td>
+                                <td>2023-10-01</td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>Electrician</td>
+                                <td>B-205</td>
+                                <td>Fan not working</td>
+                                <td><span class="status-badge status-in-progress">In Progress</span></td>
+                                <td>2023-10-03</td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td>Carpenter</td>
+                                <td>C-302</td>
+                                <td>Door hinge broken</td>
+                                <td><span class="status-badge status-pending">Pending</span></td>
+                                <td>2023-10-04</td>
+                            </tr>
+                            <tr>
+                                <td>4</td>
+                                <td>Plumber</td>
+                                <td>D-401</td>
+                                <td>Flush not working</td>
+                                <td><span class="status-badge status-pending">Pending</span></td>
+                                <td>2023-10-05</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Student Details Section -->
+                <div id="studentsSection" class="section" style="display: none;">
+                    <h2>Student Details</h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Room</th>
+                                <th>Phone</th>
+                                <th>Course</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>Rajesh Kumar</td>
+                                <td>A-101</td>
+                                <td>9876543210</td>
+                                <td>B.Tech CSE</td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>Priya Sharma</td>
+                                <td>B-205</td>
+                                <td>8765432109</td>
+                                <td>MBA</td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td>Amit Singh</td>
+                                <td>C-302</td>
+                                <td>7654321098</td>
+                                <td>B.Arch</td>
+                            </tr>
+                            <tr>
+                                <td>4</td>
+                                <td>Sneha Patel</td>
+                                <td>A-102</td>
+                                <td>6543210987</td>
+                                <td>B.Tech ECE</td>
+                            </tr>
+                            <tr>
+                                <td>5</td>
+                                <td>Vikram Malhotra</td>
+                                <td>D-401</td>
+                                <td>9432109876</td>
+                                <td>M.Tech</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Room Details Section -->
+                <div id="roomsSection" class="section" style="display: none;">
+                    <h2>Room Details</h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Room No</th>
+                                <th>Capacity</th>
+                                <th>Occupied</th>
+                                <th>Status</th>
+                                <th>Type</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>A-101</td>
+                                <td>2</td>
+                                <td>2</td>
+                                <td><span class="status-badge status-full">Full</span></td>
+                                <td>AC</td>
+                            </tr>
+                            <tr>
+                                <td>A-102</td>
+                                <td>2</td>
+                                <td>1</td>
+                                <td><span class="status-badge status-available">Available</span></td>
+                                <td>Non-AC</td>
+                            </tr>
+                            <tr>
+                                <td>B-205</td>
+                                <td>3</td>
+                                <td>3</td>
+                                <td><span class="status-badge status-full">Full</span></td>
+                                <td>AC</td>
+                            </tr>
+                            <tr>
+                                <td>C-302</td>
+                                <td>2</td>
+                                <td>2</td>
+                                <td><span class="status-badge status-full">Full</span></td>
+                                <td>AC</td>
+                            </tr>
+                            <tr>
+                                <td>D-401</td>
+                                <td>1</td>
+                                <td>1</td>
+                                <td><span class="status-badge status-full">Full</span></td>
+                                <td>Non-AC</td>
+                            </tr>
+                            <tr>
+                                <td>D-402</td>
+                                <td>1</td>
+                                <td>0</td>
+                                <td><span class="status-badge status-available">Available</span></td>
+                                <td>AC</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const loginForm = document.getElementById('loginForm');
+            const loginPage = document.getElementById('loginPage');
+            const dashboard = document.getElementById('dashboard');
+            const logoutBtn = document.getElementById('logoutBtn');
+            const navItems = document.querySelectorAll('.nav-item');
+            const sectionButtons = document.querySelectorAll('[data-section]');
+            const sections = document.querySelectorAll('.main-content > div');
+            
+            // Login form submission
+            loginForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                loginPage.style.display = 'none';
+                dashboard.style.display = 'block';
+            });
+            
+            // Logout functionality
+            logoutBtn.addEventListener('click', function() {
+                dashboard.style.display = 'none';
+                loginPage.style.display = 'flex';
+            });
+            
+            // Navigation functionality
+            function showSection(sectionId) {
+                sections.forEach(section => {
+                    section.style.display = 'none';
+                });
+                
+                document.getElementById(sectionId + 'Section').style.display = 'block';
+                
+                navItems.forEach(item => {
+                    item.classList.remove('active');
+                    if (item.getAttribute('data-section') === sectionId) {
+                        item.classList.add('active');
+                    }
+                });
+            }
+            
+            // Add event listeners to nav items
+            navItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    const sectionId = this.getAttribute('data-section');
+                    showSection(sectionId);
+                });
+            });
+            
+            // Add event listeners to buttons with data-section attribute
+            sectionButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const sectionId = this.getAttribute('data-section');
+                    showSection(sectionId);
+                });
+            });
+        });
+    </script>
+</body>
+</html>
