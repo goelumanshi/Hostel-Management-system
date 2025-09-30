@@ -1,2 +1,2 @@
 # Hostel-Management-system
-A Smart Digital Platform for Hostel Management 
+#A Smart Digital Platform for Hostel Management 
